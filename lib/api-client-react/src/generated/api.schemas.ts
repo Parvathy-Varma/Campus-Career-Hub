@@ -234,6 +234,26 @@ export interface PostingsSummary {
   closed: number;
 }
 
+export interface UserProfileUpdate {
+  name?: string;
+  department?: string;
+  cgpa?: number;
+  graduationYear?: number;
+}
+
+export interface BulkPostingAction {
+  ids: number[];
+}
+
+export interface BulkPostingReject {
+  ids: number[];
+  reason: string;
+}
+
+export interface BulkActionResult {
+  count: number;
+}
+
 export interface Notification {
   id: number;
   userId: number;

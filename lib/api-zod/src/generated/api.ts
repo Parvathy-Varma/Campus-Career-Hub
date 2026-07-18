@@ -495,6 +495,53 @@ export const MarkNotificationReadResponse = zod.object({
 
 
 /**
+ * @summary Update current user profile
+ */
+export const UpdateMyProfileBody = zod.object({
+  "name": zod.string().optional(),
+  "department": zod.string().optional(),
+  "cgpa": zod.number().optional(),
+  "graduationYear": zod.number().optional()
+})
+
+export const UpdateMyProfileResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "email": zod.string(),
+  "role": zod.enum(['company', 'student', 'admin']),
+  "companyName": zod.string().nullish(),
+  "department": zod.string().nullish(),
+  "cgpa": zod.number().nullish(),
+  "graduationYear": zod.number().nullish()
+})
+
+
+/**
+ * @summary Bulk approve postings (admin only)
+ */
+export const BulkApprovePostingsBody = zod.object({
+  "ids": zod.array(zod.number())
+})
+
+export const BulkApprovePostingsResponse = zod.object({
+  "count": zod.number()
+})
+
+
+/**
+ * @summary Bulk reject postings (admin only)
+ */
+export const BulkRejectPostingsBody = zod.object({
+  "ids": zod.array(zod.number()),
+  "reason": zod.string()
+})
+
+export const BulkRejectPostingsResponse = zod.object({
+  "count": zod.number()
+})
+
+
+/**
  * @summary Mark all notifications as read
  */
 export const MarkAllNotificationsReadResponse = zod.unknown()

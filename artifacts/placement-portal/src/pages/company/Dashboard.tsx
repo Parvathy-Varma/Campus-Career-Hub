@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { FileText, PlusCircle, Users } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
 export default function CompanyDashboard() {
   const { user } = useAuth();
@@ -15,6 +16,11 @@ export default function CompanyDashboard() {
 
   const activePostings = postings?.filter(p => p.status === 'approved') || [];
   const pendingPostings = postings?.filter(p => p.status === 'pending') || [];
+
+  const chartData = postings?.map(p => ({
+    name: p.title.length > 15 ? p.title.substring(0, 15) + '...' : p.title,
+    applications: p.applicationCount || 0
+  })) || [];
 
   return (
     <div className="space-y-8">
@@ -70,6 +76,30 @@ export default function CompanyDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {postings && postings.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Application Funnel</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[250px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
+                  <XAxis dataKey="name" tick={{ fontSize: 12 }} tickMargin={10} stroke="hsl(var(--muted-foreground))" />
+                  <YAxis allowDecimals={false} tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
+                  <Tooltip 
+                    cursor={{ fill: 'hsl(var(--muted)/0.4)' }}
+                    contentStyle={{ borderRadius: '8px', border: '1px solid hsl(var(--border))', backgroundColor: 'hsl(var(--card))' }}
+                  />
+                  <Bar dataKey="applications" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>

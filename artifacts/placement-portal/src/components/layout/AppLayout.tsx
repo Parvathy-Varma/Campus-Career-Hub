@@ -1,6 +1,6 @@
 import { useAuth } from "@/context/AuthContext";
 import { Link, useLocation } from "wouter";
-import { Bell, Briefcase, Building, GraduationCap, LayoutDashboard, LogOut, Search, Users } from "lucide-react";
+import { Bell, Briefcase, Building, GraduationCap, LayoutDashboard, LogOut, Search, Users, ClipboardList, UserCircle } from "lucide-react";
 import { useListNotifications, useMarkNotificationRead } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
@@ -23,11 +23,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           { href: '/student/dashboard', label: 'Dashboard', icon: LayoutDashboard },
           { href: '/student/postings', label: 'Browse Roles', icon: Search },
           { href: '/student/applications', label: 'My Applications', icon: Briefcase },
+          { href: '/student/profile', label: 'Profile', icon: UserCircle },
         ];
       case 'admin':
         return [
           { href: '/admin/dashboard', label: 'Analytics', icon: LayoutDashboard },
           { href: '/admin/postings', label: 'Postings', icon: Briefcase },
+          { href: '/admin/applications', label: 'Applications', icon: ClipboardList },
           { href: '/admin/companies', label: 'Companies', icon: Building },
         ];
       default:

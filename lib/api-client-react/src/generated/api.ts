@@ -25,6 +25,9 @@ import type {
   ApplicationInput,
   ApplicationStatusUpdate,
   AuthResponse,
+  BulkActionResult,
+  BulkPostingAction,
+  BulkPostingReject,
   CompanyAnalytics,
   HealthStatus,
   ListPostingsParams,
@@ -37,7 +40,8 @@ import type {
   PostingsSummary,
   RejectionInput,
   TimelinePoint,
-  User
+  User,
+  UserProfileUpdate
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -1633,6 +1637,219 @@ export const useMarkNotificationRead = <TError = ErrorType<unknown>,
         TContext
       > => {
       return useMutation(getMarkNotificationReadMutationOptions(options));
+    }
+
+export const getUpdateMyProfileUrl = () => {
+
+
+
+
+  return `/api/users/me`
+}
+
+/**
+ * @summary Update current user profile
+ */
+export const updateMyProfile = async (userProfileUpdate: UserProfileUpdate, options?: RequestInit): Promise<User> => {
+
+  return customFetch<User>(getUpdateMyProfileUrl(),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(userProfileUpdate)
+  }
+);}
+
+
+
+
+
+export const getUpdateMyProfileMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMyProfile>>, TError,{data: BodyType<UserProfileUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateMyProfile>>, TError,{data: BodyType<UserProfileUpdate>}, TContext> => {
+
+const mutationKey = ['updateMyProfile'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateMyProfile>>, {data: BodyType<UserProfileUpdate>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  updateMyProfile(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateMyProfileMutationResult = NonNullable<Awaited<ReturnType<typeof updateMyProfile>>>
+    export type UpdateMyProfileMutationBody = BodyType<UserProfileUpdate>
+    export type UpdateMyProfileMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update current user profile
+ */
+export const useUpdateMyProfile = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMyProfile>>, TError,{data: BodyType<UserProfileUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateMyProfile>>,
+        TError,
+        {data: BodyType<UserProfileUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateMyProfileMutationOptions(options));
+    }
+
+export const getBulkApprovePostingsUrl = () => {
+
+
+
+
+  return `/api/postings/bulk-approve`
+}
+
+/**
+ * @summary Bulk approve postings (admin only)
+ */
+export const bulkApprovePostings = async (bulkPostingAction: BulkPostingAction, options?: RequestInit): Promise<BulkActionResult> => {
+
+  return customFetch<BulkActionResult>(getBulkApprovePostingsUrl(),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(bulkPostingAction)
+  }
+);}
+
+
+
+
+
+export const getBulkApprovePostingsMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bulkApprovePostings>>, TError,{data: BodyType<BulkPostingAction>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof bulkApprovePostings>>, TError,{data: BodyType<BulkPostingAction>}, TContext> => {
+
+const mutationKey = ['bulkApprovePostings'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof bulkApprovePostings>>, {data: BodyType<BulkPostingAction>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  bulkApprovePostings(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type BulkApprovePostingsMutationResult = NonNullable<Awaited<ReturnType<typeof bulkApprovePostings>>>
+    export type BulkApprovePostingsMutationBody = BodyType<BulkPostingAction>
+    export type BulkApprovePostingsMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Bulk approve postings (admin only)
+ */
+export const useBulkApprovePostings = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bulkApprovePostings>>, TError,{data: BodyType<BulkPostingAction>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof bulkApprovePostings>>,
+        TError,
+        {data: BodyType<BulkPostingAction>},
+        TContext
+      > => {
+      return useMutation(getBulkApprovePostingsMutationOptions(options));
+    }
+
+export const getBulkRejectPostingsUrl = () => {
+
+
+
+
+  return `/api/postings/bulk-reject`
+}
+
+/**
+ * @summary Bulk reject postings (admin only)
+ */
+export const bulkRejectPostings = async (bulkPostingReject: BulkPostingReject, options?: RequestInit): Promise<BulkActionResult> => {
+
+  return customFetch<BulkActionResult>(getBulkRejectPostingsUrl(),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(bulkPostingReject)
+  }
+);}
+
+
+
+
+
+export const getBulkRejectPostingsMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bulkRejectPostings>>, TError,{data: BodyType<BulkPostingReject>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof bulkRejectPostings>>, TError,{data: BodyType<BulkPostingReject>}, TContext> => {
+
+const mutationKey = ['bulkRejectPostings'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof bulkRejectPostings>>, {data: BodyType<BulkPostingReject>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  bulkRejectPostings(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type BulkRejectPostingsMutationResult = NonNullable<Awaited<ReturnType<typeof bulkRejectPostings>>>
+    export type BulkRejectPostingsMutationBody = BodyType<BulkPostingReject>
+    export type BulkRejectPostingsMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Bulk reject postings (admin only)
+ */
+export const useBulkRejectPostings = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bulkRejectPostings>>, TError,{data: BodyType<BulkPostingReject>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof bulkRejectPostings>>,
+        TError,
+        {data: BodyType<BulkPostingReject>},
+        TContext
+      > => {
+      return useMutation(getBulkRejectPostingsMutationOptions(options));
     }
 
 export const getMarkAllNotificationsReadUrl = () => {

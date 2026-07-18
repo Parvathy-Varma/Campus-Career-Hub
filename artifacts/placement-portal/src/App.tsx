@@ -12,6 +12,8 @@ import AdminCompanies from "@/pages/admin/Companies";
 import StudentDashboard from "@/pages/student/Dashboard";
 import StudentPostings from "@/pages/student/Postings";
 import StudentApplications from "@/pages/student/Applications";
+import StudentProfile from "@/pages/student/Profile";
+import AdminApplications from "@/pages/admin/Applications";
 import CompanyDashboard from "@/pages/company/Dashboard";
 import NewPosting from "@/pages/company/NewPosting";
 import CompanyPostingDetail from "@/pages/company/PostingDetail";
@@ -55,6 +57,9 @@ function Router() {
       <Route path="/admin/postings/:id">
         {() => <ProtectedRoute component={AdminPostingDetail} allowedRoles={['admin']} />}
       </Route>
+      <Route path="/admin/applications">
+        {() => <ProtectedRoute component={AdminApplications} allowedRoles={['admin']} />}
+      </Route>
       <Route path="/admin/companies">
         {() => <ProtectedRoute component={AdminCompanies} allowedRoles={['admin']} />}
       </Route>
@@ -67,6 +72,9 @@ function Router() {
       </Route>
       <Route path="/student/applications">
         {() => <ProtectedRoute component={StudentApplications} allowedRoles={['student']} />}
+      </Route>
+      <Route path="/student/profile">
+        {() => <ProtectedRoute component={StudentProfile} allowedRoles={['student']} />}
       </Route>
 
       <Route path="/company/dashboard">

@@ -250,6 +250,82 @@ router.patch("/postings/:id", requireAuth, requireRole("company"), async (req, r
   res.json({ ...updated, companyName: company[0]?.companyName ?? null, applicationCount: 0, hasApplied: null });
 });
 
+// Bulk approve — admin only
+router.patch("/postings/bulk-approve", requireAuth, requireRole("admin"), async (req, res) => {
+  const { ids } = req.body as { ids: number[] };
+  if (!Array.isArray(ids) || ids.length === 0) {
+    res.status(400).json({ error: "ids must be a non-empty array" });
+    return;
+  }
+
+  const { inArray } = await import("drizzle-orm");
+
+  // Get posting details before updating
+  const toApprove = await db
+    .select({ id: postingsTable.id, companyId: postingsTable.companyId, title: postingsTable.title })
+    .from(postingsTable)
+    .where(inArray(postingsTable.id, ids));
+
+  if (toApprove.length === 0) {
+    res.json({ count: 0 });
+    return;
+  }
+
+  await db
+    .update(postingsTable)
+    .set({ status: "approved", updatedAt: new Date() })
+    .where(inArray(postingsTable.id, ids));
+
+  // Notify companies
+  const notifs = toApprove.map((p) => ({
+    userId: p.companyId,
+    message: `Your posting "${p.title}" has been approved and is now live.`,
+    type: "posting_approved",
+  }));
+  await db.insert(notificationsTable).values(notifs);
+
+  res.json({ count: toApprove.length });
+});
+
+// Bulk reject — admin only
+router.patch("/postings/bulk-reject", requireAuth, requireRole("admin"), async (req, res) => {
+  const { ids, reason } = req.body as { ids: number[]; reason: string };
+  if (!Array.isArray(ids) || ids.length === 0) {
+    res.status(400).json({ error: "ids must be a non-empty array" });
+    return;
+  }
+  if (!reason) {
+    res.status(400).json({ error: "reason is required" });
+    return;
+  }
+
+  const { inArray } = await import("drizzle-orm");
+
+  const toReject = await db
+    .select({ id: postingsTable.id, companyId: postingsTable.companyId, title: postingsTable.title })
+    .from(postingsTable)
+    .where(inArray(postingsTable.id, ids));
+
+  if (toReject.length === 0) {
+    res.json({ count: 0 });
+    return;
+  }
+
+  await db
+    .update(postingsTable)
+    .set({ status: "rejected", rejectionReason: reason, updatedAt: new Date() })
+    .where(inArray(postingsTable.id, ids));
+
+  const notifs = toReject.map((p) => ({
+    userId: p.companyId,
+    message: `Your posting "${p.title}" was rejected. Reason: ${reason}`,
+    type: "posting_rejected",
+  }));
+  await db.insert(notificationsTable).values(notifs);
+
+  res.json({ count: toReject.length });
+});
+
 // Approve posting — admin only
 router.patch("/postings/:id/approve", requireAuth, requireRole("admin"), async (req, res) => {
   const id = Number(req.params.id);

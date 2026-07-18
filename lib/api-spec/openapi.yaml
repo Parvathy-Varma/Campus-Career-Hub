@@ -407,6 +407,63 @@ paths:
               schema:
                 $ref: "#/components/schemas/Notification"
 
+  /users/me:
+    patch:
+      operationId: updateMyProfile
+      tags: [users]
+      summary: Update current user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserProfileUpdate"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /postings/bulk-approve:
+    patch:
+      operationId: bulkApprovePostings
+      tags: [postings]
+      summary: Bulk approve postings (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BulkPostingAction"
+      responses:
+        "200":
+          description: Approved count
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BulkActionResult"
+
+  /postings/bulk-reject:
+    patch:
+      operationId: bulkRejectPostings
+      tags: [postings]
+      summary: Bulk reject postings (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BulkPostingReject"
+      responses:
+        "200":
+          description: Rejected count
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BulkActionResult"
+
   /notifications/read-all:
     patch:
       operationId: markAllNotificationsRead
@@ -718,6 +775,45 @@ components:
         rejected:
           type: integer
         closed:
+          type: integer
+
+    UserProfileUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        department:
+          type: string
+        cgpa:
+          type: number
+        graduationYear:
+          type: integer
+
+    BulkPostingAction:
+      type: object
+      required: [ids]
+      properties:
+        ids:
+          type: array
+          items:
+            type: integer
+
+    BulkPostingReject:
+      type: object
+      required: [ids, reason]
+      properties:
+        ids:
+          type: array
+          items:
+            type: integer
+        reason:
+          type: string
+
+    BulkActionResult:
+      type: object
+      required: [count]
+      properties:
+        count:
           type: integer
 
     Notification:
